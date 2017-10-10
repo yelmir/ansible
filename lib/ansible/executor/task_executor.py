@@ -626,11 +626,11 @@ class TaskExecutor:
         # FIXME: we only want a limited set of variables here, so this is currently
         #        hardcoded but should be possibly fixed if we want more or if
         #        there is another source of truth we can use
-        delegated_vars = variables.get('ansible_delegated_vars', dict()).get(self._task.delegate_to, dict()).copy()
-        if len(delegated_vars) > 0:
+        all_delegated_vars = variables.get('ansible_delegated_vars', None)
+        if self._task.delegate_to is not None and len(all_delegated_vars) > 0:
             result["_ansible_delegated_vars"] = {'ansible_delegated_host': self._task.delegate_to}
             for k in ('ansible_host', ):
-                result["_ansible_delegated_vars"][k] = delegated_vars.get(k)
+                result["_ansible_delegated_vars"][k] = all_delegated_vars.get(k)
 
         # and return
         display.debug("attempt loop complete, returning result")
@@ -710,7 +710,8 @@ class TaskExecutor:
         correct connection object from the list of connection plugins
         '''
 
-        if self._task.delegate_to is not None:
+        all_delegated_vars = variables.get('ansible_delegated_vars', None)
+        if self._task.delegate_to is not None and all_delegated_vars is not None:
             # since we're delegating, we don't want to use interpreter values
             # which would have been set for the original target host
             for i in list(variables.keys()):
@@ -718,7 +719,7 @@ class TaskExecutor:
                     del variables[i]
             # now replace the interpreter values with those that may have come
             # from the delegated-to host
-            delegated_vars = variables.get('ansible_delegated_vars', dict()).get(self._task.delegate_to, dict())
+            delegated_vars = all_delegated_vars.get(self._task.delegate_to, dict())
             if isinstance(delegated_vars, dict):
                 for i in delegated_vars:
                     if isinstance(i, string_types) and i.startswith("ansible_") and i.endswith("_interpreter"):

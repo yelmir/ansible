@@ -374,50 +374,51 @@ class PlayContext(Base):
         # If the value 'ansible_delegated_vars' is in the variables, it means
         # we have a delegated-to host, so we check there first before looking
         # at the variables in general
+
+        delegated_vars = dict()
         if task.delegate_to is not None:
             # In the case of a loop, the delegated_to host may have been
             # templated based on the loop variable, so we try and locate
             # the host name in the delegated variable dictionary here
             delegated_host_name = templar.template(task.delegate_to)
-            delegated_vars = variables.get('ansible_delegated_vars', dict()).get(delegated_host_name, dict())
+            if delegated_host_name != variables.get('omit', None):
+                delegated_vars = variables.get('ansible_delegated_vars', dict()).get(delegated_host_name, dict())
 
-            delegated_transport = C.DEFAULT_TRANSPORT
-            for transport_var in MAGIC_VARIABLE_MAPPING.get('connection'):
-                if transport_var in delegated_vars:
-                    delegated_transport = delegated_vars[transport_var]
-                    break
+                delegated_transport = C.DEFAULT_TRANSPORT
+                for transport_var in MAGIC_VARIABLE_MAPPING.get('connection'):
+                    if transport_var in delegated_vars:
+                        delegated_transport = delegated_vars[transport_var]
+                        break
 
-            # make sure this delegated_to host has something set for its remote
-            # address, otherwise we default to connecting to it by name. This
-            # may happen when users put an IP entry into their inventory, or if
-            # they rely on DNS for a non-inventory hostname
-            for address_var in ('ansible_%s_host' % transport_var,) + MAGIC_VARIABLE_MAPPING.get('remote_addr'):
-                if address_var in delegated_vars:
-                    break
-            else:
-                display.debug("no remote address found for delegated host %s\nusing its name, so success depends on DNS resolution" % delegated_host_name)
-                delegated_vars['ansible_host'] = delegated_host_name
-
-            # reset the port back to the default if none was specified, to prevent
-            # the delegated host from inheriting the original host's setting
-            for port_var in ('ansible_%s_port' % transport_var,) + MAGIC_VARIABLE_MAPPING.get('port'):
-                if port_var in delegated_vars:
-                    break
-            else:
-                if delegated_transport == 'winrm':
-                    delegated_vars['ansible_port'] = 5986
+                # make sure this delegated_to host has something set for its remote
+                # address, otherwise we default to connecting to it by name. This
+                # may happen when users put an IP entry into their inventory, or if
+                # they rely on DNS for a non-inventory hostname
+                for address_var in ('ansible_%s_host' % transport_var,) + MAGIC_VARIABLE_MAPPING.get('remote_addr'):
+                    if address_var in delegated_vars:
+                        break
                 else:
-                    delegated_vars['ansible_port'] = C.DEFAULT_REMOTE_PORT
+                    display.debug("no remote address found for delegated host %s\nusing its name, so success depends on DNS resolution" % delegated_host_name)
+                    delegated_vars['ansible_host'] = delegated_host_name
 
-            # and likewise for the remote user
-            for user_var in ('ansible_%s_user' % transport_var,) + MAGIC_VARIABLE_MAPPING.get('remote_user'):
-                if user_var in delegated_vars and delegated_vars[user_var]:
-                    break
-            else:
-                delegated_vars['ansible_user'] = task.remote_user or self.remote_user
+                # reset the port back to the default if none was specified, to prevent
+                # the delegated host from inheriting the original host's setting
+                for port_var in ('ansible_%s_port' % transport_var,) + MAGIC_VARIABLE_MAPPING.get('port'):
+                    if port_var in delegated_vars:
+                        break
+                else:
+                    if delegated_transport == 'winrm':
+                        delegated_vars['ansible_port'] = 5986
+                    else:
+                        delegated_vars['ansible_port'] = C.DEFAULT_REMOTE_PORT
+
+                # and likewise for the remote user
+                for user_var in ('ansible_%s_user' % transport_var,) + MAGIC_VARIABLE_MAPPING.get('remote_user'):
+                    if user_var in delegated_vars and delegated_vars[user_var]:
+                        break
+                else:
+                    delegated_vars['ansible_user'] = task.remote_user or self.remote_user
         else:
-            delegated_vars = dict()
-
             # setup shell
             for exe_var in MAGIC_VARIABLE_MAPPING.get('executable'):
                 if exe_var in variables:

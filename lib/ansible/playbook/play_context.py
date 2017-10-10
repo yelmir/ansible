@@ -430,7 +430,7 @@ class PlayContext(Base):
                 if attr in attrs_considered:
                     continue
                 # if delegation task ONLY use delegated host vars, avoid delegated FOR host vars
-                if task.delegate_to is not None:
+                if task.delegate_to is not None and delegated_host_name != variables.get('omit', None):
                     if isinstance(delegated_vars, dict) and variable_name in delegated_vars:
                         setattr(new_info, attr, delegated_vars[variable_name])
                         attrs_considered.append(attr)

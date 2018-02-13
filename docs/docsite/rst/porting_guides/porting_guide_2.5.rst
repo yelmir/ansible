@@ -69,15 +69,15 @@ Deprecated
 Jinja tests used as filters
 ---------------------------
 
-Using Ansible-provided jinja tests as filters will be removed in Ansible 2.9.
+Using Ansible provided Jinja tests as filters will be removed in Ansible 2.9.
 
-Prior to Ansible 2.5, jinja tests included within Ansible were most often used as filters. The large difference in use is that filters are referenced as ``variable | filter_name`` where as jinja tests are refereced as ``variable is test_name``.
+Prior to Ansible 2.5, Jinja tests included within Ansible were most often used as filters. The large difference in use is that filters are referenced as ``variable | filter_name`` where as Jinja tests are refereced as ``variable is test_name``.
 
-Jinja tests are used for comparisons, while filters are used for data manipulation and have different applications in jinja. This change is to help differentiate the concepts for a better understanding of jinja, and where each can be appropriately used.
+Jinja tests are used for comparisons, while filters are used for data manipulation, and have different applications in Jinja. This change is to help differentiate the concepts for a better understanding of Jinja, and where each can be appropriately used.
 
-As of Ansible 2.5, using an Ansible provided jinja test with filter syntax, will display a deprecation error.
+As of Ansible 2.5, using an Ansible provided Jinja test with filter syntax, will display a deprecation error.
 
-**OLD** In Ansible 2.4 (and earlier) the use of an Ansible included jinja test would likely look like this:
+**OLD** In Ansible 2.4 (and earlier) the use of an Ansible included Jinja test would likely look like this:
 
 .. code-block:: yaml
 
@@ -93,7 +93,7 @@ As of Ansible 2.5, using an Ansible provided jinja test with filter syntax, will
         - result is failed
         - results is not successful
 
-In addition to the deprecation warnings, many new tests have been introduced that are aliases of the old tests. These new tests make more sense grammatically with the jinja test syntax, such as the new ``successful`` test which aliases ``success``.
+In addition to the deprecation warnings, many new tests have been introduced that are aliases of the old tests. These new tests make more sense grammatically with the Jinja test syntax, such as the new ``successful`` test which aliases ``success``.
 
 .. code-block:: yaml
 
@@ -101,7 +101,7 @@ In addition to the deprecation warnings, many new tests have been introduced tha
 
 See :doc:`playbooks_tests` for more information.
 
-Additionally, a script was created to assist in the conversion for tests using filter syntax to proper jinja test syntax. This script has been used to convert all of the Ansible integration tests to the correct format. There are a few limitations documented, and all changes made by this script should be evaluated for correctness before executing the modified playbooks. The script can be found at `https://github.com/ansible/ansible/blob/devel/hacking/fix_test_syntax.py <https://github.com/ansible/ansible/blob/devel/hacking/fix_test_syntax.py>`_.
+Additionally, a script was created to assist in the conversion for tests using filter syntax to proper Jinja test syntax. This script has been used to convert all of the Ansible integration tests to the correct format. There are a few limitations documented, and all changes made by this script should be evaluated for correctness before executing the modified playbooks. The script can be found at `https://github.com/ansible/ansible/blob/devel/hacking/fix_test_syntax.py <https://github.com/ansible/ansible/blob/devel/hacking/fix_test_syntax.py>`_.
 
 Modules
 =======

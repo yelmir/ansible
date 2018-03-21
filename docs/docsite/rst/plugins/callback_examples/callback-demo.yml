@@ -1,0 +1,18 @@
+- name: Callback Demo
+  hosts: localhost
+  connection: local
+  become: no
+
+  tasks:
+    - name: Run a command
+      command: ls -l /tmp
+
+    - name: Create a temp file
+      file:
+        path: /tmp/test
+        state: touch
+
+    - name: Fail
+      debug:
+        msg: This will always fail
+      failed_when: true

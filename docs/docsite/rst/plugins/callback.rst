@@ -75,8 +75,37 @@ You can also set this as an environment variable:
 Plugin List
 +++++++++++
 
-You can use ``ansible-doc -t callback -l`` to see the list of available plugins. 
+You can use ``ansible-doc -t callback -l`` to see the list of available plugins.
 Use ``ansible-doc -t callback <plugin name>`` to see specific documents and examples.
+
+Included Stdout Callback Plugins
+++++++++++++++++++++++++++++++++
+
+**Debug**
+
+.. raw:: html
+    :file: callback_examples/debug.html
+
+**Dense**
+
+.. raw:: html
+    :file: callback_examples/dense.html
+
+**JSON**
+
+.. raw:: html
+    :file: callback_examples/json.html
+
+**Minimal**
+
+.. raw:: html
+    :file: callback_examples/minimal.html
+
+**Skippy**
+
+.. raw:: html
+    :file: callback_examples/skippy.html
+
 
 
 .. toctree:: :maxdepth: 1

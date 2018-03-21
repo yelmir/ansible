@@ -1,0 +1,18 @@
+.callback-example {
+    border: 1px solid #e1e4e5;
+    padding: 12px 12px;
+    overflow-x: auto;
+    margin: 1px 0 24px 0
+}
+
+.f9 { color: #AAAAAA; }
+.b9 { background-color: #000000; }
+
+.f9 > .bold,.bold > .f9, .callback-example.f9 > pre > .bold {
+  /* Bold is heavy black on white, or bright white
+     depending on the default background */
+  color: #FFFFFF;
+  font-weight: normal;
+}
+
+

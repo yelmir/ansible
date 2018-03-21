@@ -1,0 +1,24 @@
+<div class='callback-example f9 b9'>
+<pre>
+
+ PLAY [Callback Demo] ***************************************************************************************************************
+ 
+ TASK [Run a command] ***************************************************************************************************************
+ <span style="color: #cdcd00">changed: [localhost]</span>
+ 
+ TASK [Create a temp file] **********************************************************************************************************
+ <span style="color: #cdcd00">changed: [localhost]</span>
+ 
+ TASK [Fail] ************************************************************************************************************************
+ <span style="color: #cd0000">fatal: [localhost]: FAILED! =&gt; {</span>
+ <span style="color: #cd0000">    "changed": false, </span>
+ <span style="color: #cd0000">    "failed_when_result": true, </span>
+ <span style="color: #cd0000">    "msg": "This will always fail"</span>
+ <span style="color: #cd0000">}</span>
+ 
+ PLAY RECAP *************************************************************************************************************************
+ <span style="color: #cd0000">localhost</span>                  : <span style="color: #00cd00">ok=2   </span> <span style="color: #cdcd00">changed=2   </span> unreachable=0    <span style="color: #cd0000">failed=1   </span>
+ 
+
+</pre>
+</div>

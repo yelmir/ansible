@@ -151,8 +151,10 @@ class ActionModule(ActionBase):
             try:
                 if PY3:
                     stdin = self._connection._new_stdin.buffer
+                    stdout = sys.stdout.buffer
                 else:
                     stdin = self._connection._new_stdin
+                    stdout = sys.stdout
                 fd = stdin.fileno()
             except (ValueError, AttributeError):
                 # ValueError: someone is using a closed file descriptor as stdin
@@ -177,7 +179,7 @@ class ActionModule(ActionBase):
 
                     old_settings = termios.tcgetattr(fd)
                     tty.setraw(fd)
-                    tty.setraw(sys.stdout.fileno())
+                    tty.setraw(stdout.fileno())
 
                     # Only echo input if no timeout is specified
                     if not seconds and echo:
@@ -191,7 +193,6 @@ class ActionModule(ActionBase):
 
             cursor_bol = curses.tigetstr('cr')
             clear_eol = curses.tigetstr('el')
-            clear_bol = curses.tigetstr('el1')
 
             while True:
                 try:
@@ -211,10 +212,10 @@ class ActionModule(ActionBase):
                         elif key_pressed in backspace:
                             # delete a character if backspace is pressed
                             result['user_input'] = result['user_input'][:-1]
-                            sys.stdout.write(u'\u001b[%s' % cursor_bol)
-                            sys.stdout.write(u'\u001b[%s' % clear_eol)
-                            # sys.stdout.write('PROMPT')
-                            sys.stdout.write(to_text(result['user_input']))
+                            stdout.write(b'\x1b[%s' % cursor_bol)
+                            stdout.write(b'\x1b[%s' % clear_eol)
+                            stdout.write(result['user_input'])
+                            stdout.flush()
                         else:
                             result['user_input'] += key_pressed
 

@@ -17,6 +17,7 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
+import curses
 import datetime
 import signal
 import sys
@@ -188,6 +189,10 @@ class ActionModule(ActionBase):
                     # are read in below
                     termios.tcflush(stdin, termios.TCIFLUSH)
 
+            cursor_bol = curses.tigetstr('cr')
+            clear_eol = curses.tigetstr('el')
+            clear_bol = curses.tigetstr('el1')
+
             while True:
                 try:
                     if fd is not None:
@@ -205,8 +210,9 @@ class ActionModule(ActionBase):
                             break
                         elif key_pressed in backspace:
                             # delete a character if backspace is pressed
-                            result['user_input'] = result['user_input'][0:-1]
-                            sys.stdout.write(u'\u001b[2')
+                            result['user_input'] = result['user_input'][:-1]
+                            sys.stdout.write(u'\u001b[%s' % cursor_bol)
+                            sys.stdout.write(u'\u001b[%s' % clear_eol)
                             # sys.stdout.write('PROMPT')
                             sys.stdout.write(to_text(result['user_input']))
                         else:

@@ -236,9 +236,22 @@ Older versions of FreeBSD worked with something like this (substitute for your c
 Latest Releases on macOS
 ++++++++++++++++++++++++++
 
-The preferred way to install Ansible on a Mac is via pip.
+The preferred way to install Ansible on a Mac is via ``pip``.
 
-The instructions can be found in `Latest Releases via Pip`_ section. If you are running macOS version 10.12 or older, then you ought to upgrade to the latest pip (9.0.3 or newer) to connect to the Python Package Index securely.
+If you are running macOS version 10.12 or older, then you ought to upgrade to the latest pip (9.0.3 or newer) to connect to the Python Package Index securely.
+
+Install ``pip`` and add it to your ``PATH``::
+
+  $ sudo -H python -m ensurepip
+  $ sudo echo '/usr/loca/bin' >> /etc/paths
+
+Launch a new shell for your ``PATH`` to be updated, then install Ansible::
+
+  $ sudo pip install ansible
+
+If you need to
+
+
 
 .. _from_pkgutil:
 
@@ -270,24 +283,18 @@ Also see the `Ansible <https://wiki.archlinux.org/index.php/Ansible>`_ page on t
 Latest Releases via Pip
 +++++++++++++++++++++++
 
-Ansible can be installed via "pip", the Python package manager.  If 'pip' isn't already available in
+Ansible can be installed via ``pip``, the Python package manager.  If ``pip`` isn't already available in
 your version of Python, you can get pip by::
 
    $ sudo easy_install pip
 
-Then install Ansible with [1]_::
+Then install Ansible::
 
    $ sudo pip install ansible
 
 Or if you are looking for the latest development version::
 
    $ pip install git+https://github.com/ansible/ansible.git@devel
-
-If you are installing on macOS Mavericks, you may encounter some noise from your compiler.  A workaround is to do the following::
-
-   $ sudo CFLAGS=-Qunused-arguments CPPFLAGS=-Qunused-arguments pip install ansible
-
-Readers that use virtualenv can also install Ansible under virtualenv, though we'd recommend to not worry about it and just install Ansible globally. Do not use easy_install to install Ansible directly.
 
 .. note::
 
@@ -418,5 +425,3 @@ bugs and feature ideas.
        Questions? Help? Ideas?  Stop by the list on Google Groups
    `irc.freenode.net <http://irc.freenode.net>`_
        #ansible IRC chat channel
-
-.. [1] If you have issues with the "pycrypto" package install on macOS, then you may need to try ``CC=clang sudo -E pip install pycrypto``.

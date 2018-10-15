@@ -179,8 +179,8 @@ def _ansiballz_main():
         sys.path.insert(0, modlib_path)
 
         # Monkeypatch the parameters into basic
-        from ansible.module_utils import basic
-        basic._ANSIBLE_ARGS = json_params
+        from ansible.module_utils import basic, validator
+        validator._ANSIBLE_ARGS = json_params
 %(coverage)s
         # Run the module!  By importing it as '__main__', it thinks it is executing as a script
         with open(module, 'rb') as mod:
@@ -276,7 +276,7 @@ def _ansiballz_main():
 
             # Monkeypatch the parameters into basic
             from ansible.module_utils import basic
-            basic._ANSIBLE_ARGS = json_params
+            validator._ANSIBLE_ARGS = json_params
 
             # Run the module!  By importing it as '__main__', it thinks it is executing as a script
             import imp

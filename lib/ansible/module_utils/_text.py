@@ -34,7 +34,13 @@
 """
 import codecs
 
-from ansible.module_utils.six import PY3, text_type, binary_type
+from itertools import repeat
+from ansible.module_utils.six import (
+    PY3,
+    text_type,
+    binary_type,
+    iteritems,
+)
 
 
 try:
@@ -266,11 +272,11 @@ def container_to_bytes(d, encoding='utf-8', errors='surrogate_or_strict'):
     if isinstance(d, text_type):
         return to_bytes(d, encoding=encoding, errors=errors)
     elif isinstance(d, dict):
-        return dict(map(json_dict_unicode_to_bytes, iteritems(d), repeat(encoding), repeat(errors)))
+        return dict(map(container_to_bytes, iteritems(d), repeat(encoding), repeat(errors)))
     elif isinstance(d, list):
-        return list(map(json_dict_unicode_to_bytes, d, repeat(encoding), repeat(errors)))
+        return list(map(container_to_bytes, d, repeat(encoding), repeat(errors)))
     elif isinstance(d, tuple):
-        return tuple(map(json_dict_unicode_to_bytes, d, repeat(encoding), repeat(errors)))
+        return tuple(map(container_to_bytes, d, repeat(encoding), repeat(errors)))
     else:
         return d
 
@@ -285,11 +291,11 @@ def container_to_unicode(d, encoding='utf-8', errors='surrogate_or_strict'):
         # Warning, can traceback
         return to_text(d, encoding=encoding, errors=errors)
     elif isinstance(d, dict):
-        return dict(map(json_dict_bytes_to_unicode, iteritems(d), repeat(encoding), repeat(errors)))
+        return dict(map(container_to_unicode, iteritems(d), repeat(encoding), repeat(errors)))
     elif isinstance(d, list):
-        return list(map(json_dict_bytes_to_unicode, d, repeat(encoding), repeat(errors)))
+        return list(map(container_to_unicode, d, repeat(encoding), repeat(errors)))
     elif isinstance(d, tuple):
-        return tuple(map(json_dict_bytes_to_unicode, d, repeat(encoding), repeat(errors)))
+        return tuple(map(container_to_unicode, d, repeat(encoding), repeat(errors)))
     else:
         return d
 

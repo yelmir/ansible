@@ -256,6 +256,42 @@ def to_text(obj, encoding='utf-8', errors=None, nonstring='simplerepr'):
 
     return to_text(value, encoding, errors)
 
+def container_to_bytes(d, encoding='utf-8', errors='surrogate_or_strict'):
+    ''' Recursively convert dict keys and values to byte str
+
+        Specialized for json return because this only handles, lists, tuples,
+        and dict container types (the containers that the json module returns)
+    '''
+
+    if isinstance(d, text_type):
+        return to_bytes(d, encoding=encoding, errors=errors)
+    elif isinstance(d, dict):
+        return dict(map(json_dict_unicode_to_bytes, iteritems(d), repeat(encoding), repeat(errors)))
+    elif isinstance(d, list):
+        return list(map(json_dict_unicode_to_bytes, d, repeat(encoding), repeat(errors)))
+    elif isinstance(d, tuple):
+        return tuple(map(json_dict_unicode_to_bytes, d, repeat(encoding), repeat(errors)))
+    else:
+        return d
+
+def container_to_unicode(d, encoding='utf-8', errors='surrogate_or_strict'):
+    ''' Recursively convert dict keys and values to byte str
+
+        Specialized for json return because this only handles, lists, tuples,
+        and dict container types (the containers that the json module returns)
+    '''
+
+    if isinstance(d, binary_type):
+        # Warning, can traceback
+        return to_text(d, encoding=encoding, errors=errors)
+    elif isinstance(d, dict):
+        return dict(map(json_dict_bytes_to_unicode, iteritems(d), repeat(encoding), repeat(errors)))
+    elif isinstance(d, list):
+        return list(map(json_dict_bytes_to_unicode, d, repeat(encoding), repeat(errors)))
+    elif isinstance(d, tuple):
+        return tuple(map(json_dict_bytes_to_unicode, d, repeat(encoding), repeat(errors)))
+    else:
+        return d
 
 #: :py:func:`to_native`
 #:      Transform a variable into the native str type for the python version

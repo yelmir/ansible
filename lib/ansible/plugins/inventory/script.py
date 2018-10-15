@@ -43,7 +43,7 @@ import os
 import subprocess
 
 from ansible.errors import AnsibleError, AnsibleParserError
-from ansible.module_utils.basic import json_dict_bytes_to_unicode
+from ansible.module_utils._text import container_to_bytes
 from ansible.module_utils.six import iteritems
 from ansible.module_utils._text import to_native, to_text
 from ansible.module_utils.common._collections_compat import Mapping
@@ -203,6 +203,6 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
         if out.strip() == '':
             return {}
         try:
-            return json_dict_bytes_to_unicode(self.loader.load(out, file_name=path))
+            return container_to_bytes(self.loader.load(out, file_name=path))
         except ValueError:
             raise AnsibleError("could not parse post variable response: %s, %s" % (cmd, out))

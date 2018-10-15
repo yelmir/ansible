@@ -275,9 +275,9 @@ try:
 except ImportError:
     HAS_LXML = False
 
-from ansible.module_utils.basic import AnsibleModule, json_dict_bytes_to_unicode
+from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.six import iteritems, string_types
-from ansible.module_utils._text import to_bytes, to_native
+from ansible.module_utils._text import to_bytes, to_native, container_to_bytes
 from ansible.module_utils.common._collections_compat import MutableMapping
 
 _IDENT = r"[a-zA-Z-][a-zA-Z0-9_\-\.]*"
@@ -770,10 +770,10 @@ def main():
     xpath = module.params['xpath']
     namespaces = module.params['namespaces']
     state = module.params['state']
-    value = json_dict_bytes_to_unicode(module.params['value'])
+    value = container_to_bytes(module.params['value'])
     attribute = module.params['attribute']
-    set_children = json_dict_bytes_to_unicode(module.params['set_children'])
-    add_children = json_dict_bytes_to_unicode(module.params['add_children'])
+    set_children = container_to_bytes(module.params['set_children'])
+    add_children = container_to_bytes(module.params['add_children'])
     pretty_print = module.params['pretty_print']
     content = module.params['content']
     input_type = module.params['input_type']

@@ -1,0 +1,14 @@
+- name: Test podman_container
+  when:
+    - ansible_facts.virtualization_type != 'docker'
+    - ansible_facts.distribution == 'RedHat'
+  block:
+    - debug:
+        msg: "Podman container tests"
+
+  always:
+    - name: Cleanup images
+      podman_image:
+        name: "{{ item }}"
+        state: absent
+      loop: []

@@ -32,7 +32,6 @@ cleanup() {
         rm -rf "${inventory_cache}"
     fi
     echo "Done"
-    exit 0
 }
 
 trap cleanup INT TERM EXIT

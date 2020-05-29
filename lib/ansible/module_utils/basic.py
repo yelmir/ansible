@@ -738,6 +738,7 @@ class AnsibleModule(object):
 
         self._CHECK_ARGUMENT_TYPES_DISPATCHER = {
             'str': self._check_type_str,
+            'str_strict': self._check_type_str_strict,
             'list': self._check_type_list,
             'dict': self._check_type_dict,
             'bool': self._check_type_bool,
@@ -1715,6 +1716,9 @@ class AnsibleModule(object):
         return safe_eval(value, locals, include_exceptions)
 
     def _check_type_str(self, value, param=None, prefix=''):
+        return check_type_str(value, allow_conversion=True)
+
+    def _check_type_str_strict(self, value):
         opts = {
             'error': False,
             'warn': False,
@@ -1741,8 +1745,8 @@ class AnsibleModule(object):
                 msg = common_msg.capitalize()
                 raise TypeError(to_native(msg))
             elif self._string_conversion_action == 'warn':
-                msg = ('The value "{0}" (type {1.__class__.__name__}) was converted to "{2}" (type string). '
-                       'If this does not look like what you expect, {3}').format(from_msg, value, to_msg, common_msg)
+                msg = ('The value {0!r} (type {0.__class__.__name__}) in a strict string field was converted to {1!r} (type string). '
+                       'If this does not look like what you expect, {2}').format(value, to_text(value), common_msg)
                 self.warn(to_native(msg))
                 return to_native(value, errors='surrogate_or_strict')
 
